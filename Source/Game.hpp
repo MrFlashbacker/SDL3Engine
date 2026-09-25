@@ -1,11 +1,12 @@
 #pragma once
+
 #include "Math.hpp"
-#include <vector>
+#include "Scene.hpp"
 #include "Actor.hpp"
-#include <Color.hpp>
+#include "Color.hpp"
+
 #include <SDL3/SDL.h>
-#include <memory>
-#include <span>
+#include <vector>
 
 struct SDLState {
     SDL_Window* window;
@@ -23,12 +24,13 @@ private:
     float deltaTime;
     int screenWidth, screenHeight;
     float mouseX, mouseY;
-    Uint32 lastTime;
+    Scene scene;
 
+    Uint32 lastTime;
     bool running;
+
     SDLState state;
-    std::vector<unsigned int> pixels;
-    std::vector<std::unique_ptr<Actor>> Scene;
+    std::vector<unsigned int> pixels;   
 
     bool InitializeSDL();
     void ShutdownSDL();
@@ -44,6 +46,10 @@ private:
     void DrawShape(Vector2 position, float scale, std::span<const Vector2> vertices, Color);
     void DrawSquare(const Square& sq);
     void DrawTriangle(const Vector2& a, const Vector2& b, const Vector2& c, const Color& color);
+    void DrawCircle(const Circle& circle);
+    void DrawCircleOutline(const Circle& circle);
     void ClearScreen(Color color);
+
+    Vector2 GetMouseFromCenter();
 };
 

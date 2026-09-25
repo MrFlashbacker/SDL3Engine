@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <ostream>
+#include <algorithm>
 
 struct Color {
     uint8_t R, G, B, A;
@@ -26,6 +27,8 @@ namespace Colors {
     inline constexpr Color Transparent{ 0, 0, 0, 0 };
 }
 
+
+
 inline constexpr uint32_t ToUint32(const Color& c) noexcept {
     return (static_cast<uint32_t>(c.R) << 24) |
            (static_cast<uint32_t>(c.G) << 16) |
@@ -41,11 +44,44 @@ inline constexpr Color FromUint32(uint32_t rgba) noexcept {
     };
 }
 
+constexpr uint8_t ClampColor(int value) noexcept 
+{ 
+    return static_cast<uint8_t>(std::clamp(value, 0, 255));
+}
+
 inline constexpr bool operator==(const Color& a, const Color& b) noexcept {
     return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
 }
 inline constexpr bool operator!=(const Color& a, const Color& b) noexcept {
     return !(a == b);
+}
+
+inline constexpr Color operator+( const Color& a, const Color& b ) noexcept 
+{ 
+    return Color{ 
+        ClampColor(a.R + b.R), 
+        ClampColor(a.G + b.G), 
+        ClampColor(a.B + b.B), 
+        ClampColor(a.A + b.A) 
+    }; 
+} 
+inline constexpr Color operator-( const Color& a, const Color& b ) noexcept 
+{ 
+    return Color{ 
+        ClampColor(static_cast<int>(a.R) - b.R), 
+        ClampColor(static_cast<int>(a.G) - b.G), 
+        ClampColor(static_cast<int>(a.B) - b.B), 
+        ClampColor(static_cast<int>(a.A) - b.A) 
+    }; 
+}
+inline constexpr Color operator*( const Color& color, float value ) noexcept 
+{ 
+    return Color{ 
+        ClampColor(static_cast<int>(color.R * value)), 
+        ClampColor(static_cast<int>(color.G * value)), 
+        ClampColor(static_cast<int>(color.B * value)), 
+        ClampColor(static_cast<int>(color.A * value)) 
+    }; 
 }
 
 inline std::ostream& operator<<(std::ostream& os, const Color& c) {

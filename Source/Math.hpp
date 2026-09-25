@@ -120,7 +120,6 @@ inline Vector2 RandomDirection() {
     Vector2 temp{std::cos(ranAngle), std::sin(ranAngle)};
     return temp;
 }
-
 //Vector3
 
 struct Vector3 {
